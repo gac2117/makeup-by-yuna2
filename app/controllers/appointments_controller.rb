@@ -1,35 +1,18 @@
 class AppointmentsController < ApplicationController
   def index
-    @artists = Artist.all 
-    
+    @apps = Appointment.all
     respond_to do |format|
         format.html { render :index }
-        format.json { render json: @artists, status: 200}
+        format.json { render json: @apps }
       end
-    # if !!Artist.find_by(id: current_user)
-    #   @artist = Artist.find_by(id: current_user)
-    #   @apps = @artist.appointments.by_date
-      
-    # else
-    #   flash[:error] = "You must be a makeup artist to view"
-    #   redirect_to client_path(current_user)
-    # end
   end
 
   def show
     @app = Appointment.find_by(id: params[:id])
     if !!Client.find_by(id: current_user)
       @client = Client.find_by(id: current_user)
-      respond_to do |format|
-        format.html { render :show }
-        format.json { render json: @app, status: 200}
-      end
     else
       @artist = Artist.find_by(id:current_user)
-      respond_to do |format|
-        format.html { render :show }
-        format.json { render json: @app, status: 200}
-      end
     end
   end
 
@@ -69,10 +52,7 @@ class AppointmentsController < ApplicationController
   def update
     @app = Appointment.find_by(id: params[:id])
     if @app.update(app_params)
-      respond_to do |format|
-        format.html { redirect_to client_appointment_path(current_user, @app) }
-        format.json { render json: @app, status: 202 }
-      end
+      redirect_to client_appointment_path(current_user, @app)
     else
       @client = Client.find_by(id: current_user)
       render :edit

@@ -1,5 +1,5 @@
 class ArtistSerializer < ActiveModel::Serializer
-  attributes :id, :name, :email, :extra
+  attributes :id, :name
 
   has_many :appointments
   has_many :clients
