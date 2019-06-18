@@ -36,6 +36,20 @@ const bindClickHandlers = () => {
 			
 	})
 
+	$(document).on('click', '#app-details', function(e) {
+		e.preventDefault();
+		let id = $(this).attr('data-id');
+		let clientId = $(this).attr('client-id');
+		fetch(`/clients/${clientId}/appointments/${id}.json`)
+			.then(res => res.json())
+			.then(data => {
+				$('.client-app-table').html('')
+				let newApp = new Appointment(data);
+				console.log(newApp)
+				let details = newApp.formatDetails();
+				$('.client-app-table').append(details)
+			})
+	})
 	
 }
 
@@ -57,6 +71,17 @@ class Appointment {
 		        <td>${this.id["date_time"]}</td>
 		        <td>${this.id["service"]}</td>
 		     </tr>
+		`
+		return tableHtml;
+	}
+
+	formatDetails() {
+		let tableHtml = `
+			<h3>Appointment Details</h3>
+			<h4><em>Appointment Date:<em>${this.id["date_time"]}</h4>
+			<h4><em>Artist Name:<em> ${this.id["artist"]["name"]}</h4>
+			<h4><em>Type of Service:<em> ${this.id["service"]}</h4>
+			<h4><em>Requests or Comments:<em> ${this.id["comments"]}</h4>
 		`
 		return tableHtml;
 	}

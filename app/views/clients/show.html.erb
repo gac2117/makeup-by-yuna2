@@ -7,9 +7,9 @@
 </div><br>
 
 <img width="200" src="<%= @client.extra %>"><br><br>
-<button id="edit_profile"><%= link_to "Edit Profile", edit_client_path(@client) %></button>
+<button id="edit-profile"><%= link_to "Edit Profile", edit_client_path(@client) %></button>
 <br><br>
-
+<% if @client == @user %>
 <table class="client-app-table">
   <thead>
     <tr>
@@ -18,20 +18,20 @@
       <th>Details</th>
     </tr>
   </thead>
-
+  <% @apps.each do |app| %>
   <tbody>
     <tr>
-      <td id="app_date"></td>
-      <td id="app_artist"></td>
-      <td id="app_details"></td>
+      <td id="app-date"><%= app.date_time.strftime("%A, %b %d, %Y at %l:%M %p") %></td>
+      <td id="app-artist"><%= link_to "#{app.artist.name}", artist_path(app.artist) %></td>
+      <td id="app-details" data-id="<%= app.id %>" client-id="<%= @client.id %>"><%= link_to "Click Here", client_appointment_path(@client, app) %></td>
     </tr>
   </tbody>
-
+  <% end %>
 </table><br>
 
-<button id="new_app"><%= link_to "New Appointment", new_client_appointment_path(@client) %></button>
+<button id="new-app"><%= link_to "New Appointment", new_client_appointment_path(@client) %></button>
 <br><br>
 <br><br>
-
-<button id="artist_apps"><%= link_to "Go Back", appointments_path %></button>
-
+<% else %>
+<button id="artist-apps"><%= link_to "Go Back", appointments_path %></button>
+<% end %>
