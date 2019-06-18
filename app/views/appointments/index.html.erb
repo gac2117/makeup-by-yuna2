@@ -1,22 +1,19 @@
-<h1>Appointments for <%= @artist.name %></h1>
-<br>
-<table class="table">
+<h1>List of all appointments</h1>
+<table class="app-table">
   <thead>
     <tr>
+      <th>Artist Name</th>
       <th>Client Name</th>
       <th>Appointment Date</th>
-      <th>Details</th>
+      <th>Type of Service</th>
     </tr>
   </thead>
-    <% @apps.each do |app| %>
     <tbody>
       <tr>
-        <td><%= link_to "#{app.client.name}", client_path(app.client_id) %>
-        <td><%= app.date_time.strftime("%A, %b %d, %Y at %l:%M %p") %></td>
-        <td><%= link_to "Click Here", client_appointment_path(app.client_id, app) %></td>
+        <td id="artist-name"></td>
+        <td id="client-name"></td>
+        <td id="app-date"></td>
+        <td id="app-service"></td>
       </tr>
     </tbody>
-    <% end %>
   </table>
-  <br><br>
-  Go to your <%= link_to "Profile page", artist_path(@artist) %>

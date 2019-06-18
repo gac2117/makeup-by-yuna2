@@ -11,7 +11,6 @@ About <%= @artist.name %>:<br>
 <button id="edit_profile"><%= link_to "Edit Profile", edit_artist_path(@current_artist) %></button>
 <br><br>
 <button id="view_apps"><%= link_to "View Appointments", appointments_path %></button><br><br>
-<button id="sign_out"><%= link_to "Sign Out", signout_path, method: :delete %></button>
 
 <% else %>
 <button id="go_back"><%= link_to "Go back", artist_path(@other_artist) %></button>

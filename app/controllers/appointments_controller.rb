@@ -1,16 +1,19 @@
 class AppointmentsController < ApplicationController
   def index
-    if !!Artist.find_by(id: current_user)
-      @artist = Artist.find_by(id: current_user)
-      @apps = @artist.appointments.by_date
-      respond_to do |format|
+    @artists = Artist.all 
+    
+    respond_to do |format|
         format.html { render :index }
-        format.json { render json: @apps, status: 200}
+        format.json { render json: @artists, status: 200}
       end
-    else
-      flash[:error] = "You must be a makeup artist to view"
-      redirect_to client_path(current_user)
-    end
+    # if !!Artist.find_by(id: current_user)
+    #   @artist = Artist.find_by(id: current_user)
+    #   @apps = @artist.appointments.by_date
+      
+    # else
+    #   flash[:error] = "You must be a makeup artist to view"
+    #   redirect_to client_path(current_user)
+    # end
   end
 
   def show
