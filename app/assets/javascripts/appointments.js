@@ -27,7 +27,9 @@ const bindClickHandlers = () => {
 				`
 				$('.app-container').append(indexPage);
 				data.forEach(app => {
+					
 					let newApp = new Appointment(app);
+					console.log(newApp)
 					let tableHtml = newApp.formatTable();
 					$('#app-table').append(tableHtml);
 				})
@@ -45,7 +47,6 @@ const bindClickHandlers = () => {
 			.then(data => {
 				$('#client-app-table').html('')
 				let newApp = new Appointment(data);
-				console.log(newApp)
 				let details = newApp.formatDetails();
 				$('#client-app-table').append(details)
 			})
@@ -54,22 +55,22 @@ const bindClickHandlers = () => {
 }
 
 class Appointment {
-	constructor(id, date_time, service, comments, artist_id, client_id) {
-		this.id = id;
-		this.date_time = date_time;
-		this.service = service;
-		this.comments = comments;
-		this.artist_id = artist_id;
-		this.client_id = client_id;
+	constructor(app) {
+		this.id = app["id"];
+		this.date_time = app["date_time"];
+		this.service = app["service"];
+		this.comments = app["comments"];
+		this.artist_name = app["artist"]["name"];
+		this.client_name = app["client"]["name"];
 	}
 
 	formatTable() {
 		let tableHtml = `
 			<tr>
-		        <td>${this.id["artist"]["name"]}</td>
-		        <td>${this.id["client"]["name"]}</td>
-		        <td>${this.id["date_time"]}</td>
-		        <td>${this.id["service"]}</td>
+		        <td>${this.artist_name}</td>
+		        <td>${this.client_name}</td>
+		        <td>${this.date_time}</td>
+		        <td>${this.service}</td>
 		     </tr>
 		`
 		return tableHtml;
@@ -81,19 +82,19 @@ class Appointment {
 			<ul class="list-group">
 				<li class="list-group-item">
 					<h5 class="list-group-item-heading">Date and Time:</h5> 
-					<p class="list-group-item-text">${this.id["date_time"]}</p>
+					<p class="list-group-item-text">${this.date_time}</p>
 				</li>
 				<li class="list-group-item">
 					<h5 class="list-group-item-heading">Type of Service:</h5>
-					<p class="list-group-item-text">${this.id["service"]}</p>
+					<p class="list-group-item-text">${this.service}</p>
 				</li>
 				<li class="list-group-item">
 					<h5 class="list-group-item-heading">Makeup Artist Name:</h5>
-					<p class="list-group-item-text">${this.id["artist"]["name"]}</p>
+					<p class="list-group-item-text">${this.artist_name}</p>
 				</li>
 				<li class="list-group-item">
 					<h5 class="list-group-item-heading">Comments or Requests:</h5>
-					<p class="list-group-item-text">${this.id["comments"]}</p>
+					<p class="list-group-item-text">${this.comments}</p>
 				</li>
 			</ul>
 		`
