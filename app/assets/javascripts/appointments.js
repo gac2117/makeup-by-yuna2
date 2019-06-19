@@ -6,35 +6,7 @@ const bindClickHandlers = () => {
 	$('#app-link').on('click', (e) => {
 		e.preventDefault();
 		history.pushState(null, null, "appointments")
-		fetch(`/appointments.json`)
-			.then(res => res.json())
-			.then(data => {
-				$('.app-container').html('')
-				let indexPage = `
-					<h1>List of all appointments</h1>
-					<table class="table">
-					  <thead>
-					    <tr>
-					      <th>Artist Name</th>
-					      <th>Client Name</th>
-					      <th>Appointment Date</th>
-					      <th>Type of Service</th>
-					    </tr>
-					  </thead>
-					  <tbody id="app-table">
-					  </tbody>
-				  </table>
-				`
-				$('.app-container').append(indexPage);
-				data.forEach(app => {
-					console.log(app)
-					let newApp = new Appointment(app);
-					let tableHtml = newApp.formatTable();
-					$('#app-table').append(tableHtml);
-				})
-			
-			})
-			
+		getAppointments();
 	})
 
 	$(document).on('click', '#app-details', function(e) {
@@ -42,15 +14,43 @@ const bindClickHandlers = () => {
 		let id = $(this).attr('data-id');
 		let clientId = $(this).attr('client-id');
 		fetch(`/clients/${clientId}/appointments/${id}.json`)
-			.then(res => res.json())
-			.then(data => {
-				$('#client-app-table').html('')
-				let newApp = new Appointment(data);
-				let details = newApp.formatDetails();
-				$('#client-app-table').append(details)
-			})
+		.then(res => res.json())
+		.then(data => {
+			$('#client-app-table').html('')
+			let newApp = new Appointment(data);
+			let details = newApp.formatDetails();
+			$('#client-app-table').append(details)
+		})
 	})
-	
+}
+
+const getAppointments = () => {
+	fetch(`/appointments.json`)
+	.then(res => res.json())
+	.then(data => {
+		$('.app-container').html('')
+		let indexPage = `
+			<h1>List of all appointments</h1>
+			<table class="table">
+			  <thead>
+			    <tr>
+			      <th>Artist Name</th>
+			      <th>Client Name</th>
+			      <th>Appointment Date</th>
+			      <th>Type of Service</th>
+			    </tr>
+			  </thead>
+			  <tbody id="app-table">
+			  </tbody>
+		  </table>
+		`
+		$('.app-container').append(indexPage);
+		data.forEach(app => {
+			let newApp = new Appointment(app);
+			let tableHtml = newApp.formatTable();
+			$('#app-table').append(tableHtml);
+		})
+	})
 }
 
 class Appointment {
@@ -64,11 +64,12 @@ class Appointment {
 	}
 
 	formatTable() {
+		let formattedTime = formatTime(this.date_time);
 		let tableHtml = `
 			<tr>
 		        <td>${this.artist.name}</td>
 		        <td>${this.client.name}</td>
-		        <td>${this.date_time.toDateString()}</td>
+		        <td>${this.date_time.toDateString()}${formattedTime}</td>
 		        <td>${this.service}</td>
 		     </tr>
 		`
@@ -76,14 +77,13 @@ class Appointment {
 	}
 
 	formatDetails() {
-		let formattedTime = this.date_time.formatTime();
-		console.log(formattedTime)
+		let formattedTime = formatTime(this.date_time);
 		let tableHtml = `
 			<h3>Appointment Details</h3>
 			<ul class="list-group">
 				<li class="list-group-item">
 					<h5 class="list-group-item-heading">Date and Time:</h5> 
-					<p class="list-group-item-text">${this.date_time.toDateString()}</p>
+					<p class="list-group-item-text">${this.date_time.toDateString()}${formattedTime}</p>
 				</li>
 				<li class="list-group-item">
 					<h5 class="list-group-item-heading">Type of Service:</h5>
@@ -101,12 +101,38 @@ class Appointment {
 		`
 		return tableHtml;
 	}
+}
 
-	formatTime() {
-		let hours = date.getHours();
-		let mins = date.getMinutes();
-		let formattedTime = `${hours}:${mins}`
-		return formattedTime;
-	}
+const formatTime = (date) => {
+  let hour = date.getUTCHours();
+  let min = date.getUTCMinutes();
+  
+  let prepand = (hour >= 12)? " PM ":" AM ";
+  hour = (hour >= 12)? hour - 12: hour;
+
+  if (min===0) {
+  	min += '0'
+  }
+
+  if (hour===0 && prepand===' PM ') { 
+	  if (min===0) { 
+		  hour=12;
+		  prepand=' Noon';
+	  } else { 
+		  hour=12;
+		  prepand=' PM';
+	  } 
+  }
+
+  if (hour===0 && prepand===' AM ') { 
+	  if (min===0) { 
+		  hour=12;
+		  prepand=' Midnight';
+	  } else { 
+		  hour=12;
+		  prepand=' AM';
+	  } 
+  } 
+  return " at " + hour + ":" + min + prepand;
 }
 
