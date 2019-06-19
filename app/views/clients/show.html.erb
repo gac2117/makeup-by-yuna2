@@ -1,16 +1,16 @@
 <h1><%= @client.name %>'s Profile Page</h1>
-<div id='flash' class='error'>
+<!-- <div id='flash' class='error'>
   <%= flash[:error] %>
 </div>
 <div id='flash' class='notice'>
   <%= flash[:notice] %>
-</div><br>
+</div><br> -->
 
 <img width="200" src="<%= @client.extra %>"><br><br>
 <button id="edit-profile"><%= link_to "Edit Profile", edit_client_path(@client) %></button>
 <br><br>
 <% if @client == @user %>
-<table class="client-app-table">
+<table class="table" id="client-app-table">
   <thead>
     <tr>
       <th>Appointment Date and Time</th>

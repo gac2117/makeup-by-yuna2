@@ -12,7 +12,7 @@ const bindClickHandlers = () => {
 				$('.app-container').html('')
 				let indexPage = `
 					<h1>List of all appointments</h1>
-					<table class="apps-table">
+					<table class="table">
 					  <thead>
 					    <tr>
 					      <th>Artist Name</th>
@@ -43,11 +43,11 @@ const bindClickHandlers = () => {
 		fetch(`/clients/${clientId}/appointments/${id}.json`)
 			.then(res => res.json())
 			.then(data => {
-				$('.client-app-table').html('')
+				$('#client-app-table').html('')
 				let newApp = new Appointment(data);
 				console.log(newApp)
 				let details = newApp.formatDetails();
-				$('.client-app-table').append(details)
+				$('#client-app-table').append(details)
 			})
 	})
 	
@@ -78,16 +78,26 @@ class Appointment {
 	formatDetails() {
 		let tableHtml = `
 			<h3>Appointment Details</h3>
-			<h4><em>Appointment Date:<em>${this.id["date_time"]}</h4>
-			<h4><em>Artist Name:<em> ${this.id["artist"]["name"]}</h4>
-			<h4><em>Type of Service:<em> ${this.id["service"]}</h4>
-			<h4><em>Requests or Comments:<em> ${this.id["comments"]}</h4>
+			<ul class="list-group">
+				<li class="list-group-item">
+					<h5 class="list-group-item-heading">Date and Time:</h5> 
+					<p class="list-group-item-text">${this.id["date_time"]}</p>
+				</li>
+				<li class="list-group-item">
+					<h5 class="list-group-item-heading">Type of Service:</h5>
+					<p class="list-group-item-text">${this.id["service"]}</p>
+				</li>
+				<li class="list-group-item">
+					<h5 class="list-group-item-heading">Makeup Artist Name:</h5>
+					<p class="list-group-item-text">${this.id["artist"]["name"]}</p>
+				</li>
+				<li class="list-group-item">
+					<h5 class="list-group-item-heading">Comments or Requests:</h5>
+					<p class="list-group-item-text">${this.id["comments"]}</p>
+				</li>
+			</ul>
 		`
 		return tableHtml;
-	}
-
-	appInfo() {
-		return `You have booked a(n) ${this.service} appointment for ${this.date_time}.`
 	}
 }
 
