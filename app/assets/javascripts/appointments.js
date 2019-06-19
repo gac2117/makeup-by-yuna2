@@ -22,6 +22,19 @@ const bindClickHandlers = () => {
 			$('#client-app-table').append(details)
 		})
 	})
+
+	$('#new-app').on('submit', function(e) {
+		e.preventDefault();
+		const values = $(this).serialize()
+
+		$.post("/appointments", values)
+		.done(function(data) {
+			$('#appointment-form').html('')
+			const newApp = new Appointment(data)
+			const details = newApp.formatDetails();
+			$('#appointment-form').append(details)
+		})
+	})
 }
 
 const getAppointments = () => {
@@ -30,7 +43,7 @@ const getAppointments = () => {
 	.then(data => {
 		$('.app-container').html('')
 		let indexPage = `
-			<h1>List of all appointments</h1>
+			<h1>List of all appointments</h1><br>
 			<table class="table">
 			  <thead>
 			    <tr>
@@ -79,7 +92,7 @@ class Appointment {
 	formatDetails() {
 		let formattedTime = formatTime(this.date_time);
 		let tableHtml = `
-			<h3>Appointment Details</h3>
+			<h3>Appointment Details</h3><br>
 			<ul class="list-group">
 				<li class="list-group-item">
 					<h5 class="list-group-item-heading">Date and Time:</h5> 

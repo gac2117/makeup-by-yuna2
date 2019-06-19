@@ -34,8 +34,8 @@ class AppointmentsController < ApplicationController
     @app = Appointment.new(app_params)
     if @app.save
       respond_to do |format|
-        format.html { redirect_to client_appointment_path(current_user, @app) }
-        format.json { render json: @app, status: 201 }
+        # format.html { redirect_to client_appointment_path(current_user, @app) }
+        format.json { render json: @app }
       end
     else
       @client = Client.find_by(id: current_user)
