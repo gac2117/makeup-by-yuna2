@@ -1,10 +1,15 @@
 class AppointmentsController < ApplicationController
   def index
-    @apps = Appointment.all
-    respond_to do |format|
+    if !!Artist.find_by(id: current_user)
+      @artist = Artist.find_by(id: current_user)
+      @apps = @artist.appointments.by_date
+    else
+      @apps = Appointment.all
+      respond_to do |format|
         format.html { render :index }
         format.json { render json: @apps }
       end
+    end
   end
 
   def show
