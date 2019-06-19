@@ -27,9 +27,8 @@ const bindClickHandlers = () => {
 				`
 				$('.app-container').append(indexPage);
 				data.forEach(app => {
-					
+					console.log(app)
 					let newApp = new Appointment(app);
-					console.log(newApp)
 					let tableHtml = newApp.formatTable();
 					$('#app-table').append(tableHtml);
 				})
@@ -56,20 +55,20 @@ const bindClickHandlers = () => {
 
 class Appointment {
 	constructor(app) {
-		this.id = app["id"];
-		this.date_time = app["date_time"];
-		this.service = app["service"];
-		this.comments = app["comments"];
-		this.artist_name = app["artist"]["name"];
-		this.client_name = app["client"]["name"];
+		this.id = app.id;
+		this.date_time = new Date(app.date_time);
+		this.service = app.service;
+		this.comments = app.comments;
+		this.artist = app.artist;
+		this.client = app.client;
 	}
 
 	formatTable() {
 		let tableHtml = `
 			<tr>
-		        <td>${this.artist_name}</td>
-		        <td>${this.client_name}</td>
-		        <td>${this.date_time}</td>
+		        <td>${this.artist.name}</td>
+		        <td>${this.client.name}</td>
+		        <td>${this.date_time.toDateString()}</td>
 		        <td>${this.service}</td>
 		     </tr>
 		`
@@ -77,12 +76,14 @@ class Appointment {
 	}
 
 	formatDetails() {
+		let formattedTime = this.date_time.formatTime();
+		console.log(formattedTime)
 		let tableHtml = `
 			<h3>Appointment Details</h3>
 			<ul class="list-group">
 				<li class="list-group-item">
 					<h5 class="list-group-item-heading">Date and Time:</h5> 
-					<p class="list-group-item-text">${this.date_time}</p>
+					<p class="list-group-item-text">${this.date_time.toDateString()}</p>
 				</li>
 				<li class="list-group-item">
 					<h5 class="list-group-item-heading">Type of Service:</h5>
@@ -90,7 +91,7 @@ class Appointment {
 				</li>
 				<li class="list-group-item">
 					<h5 class="list-group-item-heading">Makeup Artist Name:</h5>
-					<p class="list-group-item-text">${this.artist_name}</p>
+					<p class="list-group-item-text">${this.artist.name}</p>
 				</li>
 				<li class="list-group-item">
 					<h5 class="list-group-item-heading">Comments or Requests:</h5>
@@ -99,6 +100,13 @@ class Appointment {
 			</ul>
 		`
 		return tableHtml;
+	}
+
+	formatTime() {
+		let hours = date.getHours();
+		let mins = date.getMinutes();
+		let formattedTime = `${hours}:${mins}`
+		return formattedTime;
 	}
 }
 
