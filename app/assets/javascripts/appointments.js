@@ -35,6 +35,33 @@ const bindClickHandlers = () => {
 			$('#appointment-form').append(details)
 		})
 	})
+
+	$('#show-apps').on('click', function(e) {
+		let clientId = $(this).attr('data-client-id');
+		fetch(`/clients/${clientId}.json`)
+		.then(res => res.json())
+		.then(data => { 
+			$('#client-app-table').html('')
+			let showPage = `
+			  <thead>
+			    <tr>
+			      <th>Appointment Date and Time</th>
+			      <th>Type of Service</th>
+			      <th>Comments / Requests</th>
+			    </tr>
+			  </thead>
+			  <tbody id="apps-details">
+			  </tbody>
+			`
+			$('#client-app-table').append(showPage);
+			data.appointments.forEach(app => {
+				let newApp = new Appointment(app);
+				let tableHtml = newApp.showTable();
+				$('#apps-details').append(tableHtml);
+			})
+		})
+	})
+	
 }
 
 const getAppointments = () => {
@@ -84,6 +111,18 @@ class Appointment {
 		        <td>${this.client.name}</td>
 		        <td>${this.date_time.toDateString()}${formattedTime}</td>
 		        <td>${this.service}</td>
+		     </tr>
+		`
+		return tableHtml;
+	}
+
+	showTable() {
+		let formattedTime = formatTime(this.date_time);
+		let tableHtml = `
+			<tr>
+		        <td>${this.date_time.toDateString()}${formattedTime}</td>
+		        <td>${this.service}</td>
+		        <td>${this.comments}</td>
 		     </tr>
 		`
 		return tableHtml;

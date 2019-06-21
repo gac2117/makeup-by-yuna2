@@ -8,7 +8,7 @@ class ClientsController < ApplicationController
     @apps = @client.appointments.by_date
     respond_to do |format|
       format.html { render :show }
-      format.json { render json: @apps }
+      format.json { render json: @client }
     end
   end
 

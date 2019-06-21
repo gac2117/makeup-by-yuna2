@@ -8,6 +8,7 @@
 
 <img width="200" src="<%= @client.extra %>"><br><br>
 <button id="edit-profile"><%= link_to "Edit Profile", edit_client_path(@client) %></button>
+<button id="show-apps" data-client-id="<%= @client.id %>">Show Appointments</button>
 <br><br>
 <% if @client == @user %>
 <table class="table" id="client-app-table">
@@ -19,7 +20,7 @@
     </tr>
   </thead>
   <% @apps.each do |app| %>
-  <tbody>
+  <tbody id="apps-details">
     <tr>
       <td id="app-date"><%= app.date_time.strftime("%A, %b %d, %Y at %l:%M %p") %></td>
       <td id="app-artist"><%= link_to "#{app.artist.name}", artist_path(app.artist) %></td>
